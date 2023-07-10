@@ -9,14 +9,11 @@ import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,6 +21,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Optional;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,67 +51,66 @@ public class ProdutoControllerImplTest {
 
     @Test
     public void getAll() throws Exception {
-        Mockito.when(produtoMapper.asDTOList(ArgumentMatchers.any())).thenReturn(ProdutoBuilder.getListDTO());
+        when(produtoMapper.asDTOList(any())).thenReturn(ProdutoBuilder.getListDTO());
 
-        Mockito.when(produtoService.findAll()).thenReturn(ProdutoBuilder.getListEntities());
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_URL))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .contentType(MediaType.APPLICATION_JSON))
+        when(produtoService.findAll()).thenReturn(ProdutoBuilder.getListEntities());
+        mockMvc.perform(get(ENDPOINT_URL))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentType(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(2)));
 
     }
 
     @Test
     public void getById() throws Exception {
-        Mockito.when(produtoMapper.asDTO(ArgumentMatchers.any())).thenReturn(ProdutoBuilder.getDTO());
+        when(produtoMapper.asDTO(any())).thenReturn(ProdutoBuilder.getDTO());
 
-        Mockito.when(produtoService.findById(ArgumentMatchers.anyInt())).thenReturn(Optional.of(ProdutoBuilder.getEntity()).get());
+        when(produtoService.findById(anyInt())).thenReturn(Optional.of(ProdutoBuilder.getEntity()).get());
 
-        mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_URL + "/1"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content()
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(ENDPOINT_URL + "/1"))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentType(APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Is.is(1)));
-        Mockito.verify(produtoService, Mockito.times(1)).findById(1);
-        Mockito.verifyNoMoreInteractions(produtoService);
+        verify(produtoService, times(1)).findById(1);
+        verifyNoMoreInteractions(produtoService);
     }
 
     @Test
     public void save() throws Exception {
-        Mockito.when(produtoMapper.asEntity(ArgumentMatchers.any())).thenReturn(ProdutoBuilder.getEntity());
-        Mockito.when(produtoService.save(ArgumentMatchers.any(Produto.class))).thenReturn(ProdutoBuilder.getEntity());
+        when(produtoMapper.asEntity(any())).thenReturn(ProdutoBuilder.getEntity());
+        when(produtoService.save(any(Produto.class))).thenReturn(ProdutoBuilder.getEntity());
 
         mockMvc.perform(
                         MockMvcRequestBuilders.post(ENDPOINT_URL)
-                                .contentType(MediaType.APPLICATION_JSON)
+                                .contentType(APPLICATION_JSON)
                                 .content(CustomUtils.asJsonString(ProdutoBuilder.getDTO())))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
-        Mockito.verify(produtoService, Mockito.times(1)).save(ArgumentMatchers.any(Produto.class));
-        Mockito.verifyNoMoreInteractions(produtoService);
+                .andExpect(status().isCreated());
+        verify(produtoService, times(1)).save(any(Produto.class));
+        verifyNoMoreInteractions(produtoService);
     }
 
     @Test
     public void update() throws Exception {
-        Mockito.when(produtoMapper.asEntity(ArgumentMatchers.any())).thenReturn(ProdutoBuilder.getEntity());
-        Mockito.when(produtoService.update(ArgumentMatchers.any(), ArgumentMatchers.anyInt())).thenReturn(ProdutoBuilder.getEntity());
+        when(produtoMapper.asEntity(any())).thenReturn(ProdutoBuilder.getEntity());
+        when(produtoService.update(any(), anyInt())).thenReturn(ProdutoBuilder.getEntity());
 
         mockMvc.perform(
-                        MockMvcRequestBuilders.put(ENDPOINT_URL + "/1")
-                                .contentType(MediaType.APPLICATION_JSON)
+                        put(ENDPOINT_URL + "/1")
+                                .contentType(APPLICATION_JSON)
                                 .content(CustomUtils.asJsonString(ProdutoBuilder.getDTO())))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        Mockito.verify(produtoService, Mockito.times(1)).update(ArgumentMatchers.any(Produto.class), ArgumentMatchers.anyInt());
-        Mockito.verifyNoMoreInteractions(produtoService);
+                .andExpect(status().isOk());
+        verify(produtoService, times(1)).update(any(Produto.class), anyInt());
+        verifyNoMoreInteractions(produtoService);
     }
 
     @Test
-    public void delete() throws Exception {
-        Mockito.doNothing().when(produtoService).deleteById(ArgumentMatchers.anyInt());
-        mockMvc.perform(
-                        MockMvcRequestBuilders.delete(ENDPOINT_URL + "/1"))
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
-        Mockito.verify(produtoService, Mockito.times(1)).deleteById(Mockito.anyInt());
-        Mockito.verifyNoMoreInteractions(produtoService);
+    public void deleteProduct() throws Exception {
+        doNothing().when(produtoService).deleteById(anyInt());
+        mockMvc.perform(delete(ENDPOINT_URL + "/1"))
+                .andExpect(status().isNoContent());
+        verify(produtoService, times(1)).deleteById(anyInt());
+        verifyNoMoreInteractions(produtoService);
     }
 }
