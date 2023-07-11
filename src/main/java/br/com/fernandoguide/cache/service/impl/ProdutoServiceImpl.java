@@ -3,7 +3,7 @@ package br.com.fernandoguide.cache.service.impl;
 import br.com.fernandoguide.cache.dao.ProdutoRepository;
 import br.com.fernandoguide.cache.entity.Produto;
 import br.com.fernandoguide.cache.service.ProdutoService;
-import br.com.fernandoguide.cache.service.exceptions.ObjectNotFoundExecpition;
+import br.com.fernandoguide.cache.service.exceptions.ObjectNotFoundException;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -42,7 +42,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     @Override
     @CachePut(value = "produto")
     public Produto findById(Integer id) {
-        return  repository.findById(id).orElseThrow(() -> new ObjectNotFoundExecpition(
+        return  repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(
                "Objeto não encontrado com o  id: " + id  + " do tipo " + Produto.class.getSimpleName()));
 
     }
