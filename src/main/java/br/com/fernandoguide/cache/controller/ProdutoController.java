@@ -17,10 +17,10 @@ public interface ProdutoController {
     public ProdutoDTO save(@RequestBody ProdutoDTO produto);
 
     @ApiOperation("Find by Id")
-    public ProdutoDTO findById(@PathVariable("id") Integer id);
+    public ProdutoDTO findById(@PathVariable Integer id);
 
     @ApiOperation("Delete based on primary key")
-    public ResponseEntity<ProdutoDTO> delete(@PathVariable("id") Integer id);
+    public ResponseEntity<ProdutoDTO> delete(@PathVariable Integer id);
 
     @ApiOperation("Find all data")
     public List<ProdutoDTO> list();
@@ -29,5 +29,5 @@ public interface ProdutoController {
     public Page<ProdutoDTO> pageQuery(Pageable pageable);
 
     @ApiOperation("Update one data")
-    public ResponseEntity<ProdutoDTO> update(@RequestBody ProdutoDTO dto, @PathVariable("id") Integer id);
+    public ResponseEntity<ProdutoDTO> update(@RequestBody ProdutoDTO dto, @PathVariable Integer id);
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/api/produto")
+@RequestMapping("/api")
 @RestController
 public class ProdutoControllerImpl implements ProdutoController {
     private final ProdutoService produtoService;
@@ -28,7 +28,7 @@ public class ProdutoControllerImpl implements ProdutoController {
     }
 
     @Override
-    @PostMapping
+    @PostMapping("/produto")
     @ResponseStatus(HttpStatus.CREATED)
     public ProdutoDTO save(@RequestBody ProdutoDTO produtoDTO) {
         Produto produto = produtoMapper.asEntity(produtoDTO);
@@ -36,27 +36,27 @@ public class ProdutoControllerImpl implements ProdutoController {
     }
 
     @Override
-    @GetMapping("/{id}")
-    public ProdutoDTO findById(@PathVariable("id") Integer id) {
+    @GetMapping("/produto/{id}")
+    public ProdutoDTO findById(@PathVariable Integer id) {
         Produto produto = produtoService.findById(id);
         return produtoMapper.asDTO(produto);
     }
 
     @Override
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ProdutoDTO>  delete(@PathVariable("id") Integer id) {
+    @DeleteMapping("produto/{id}")
+    public ResponseEntity<ProdutoDTO>  delete(@PathVariable Integer id) {
         produtoService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Override
-    @GetMapping
+    @GetMapping("/produtos")
     public List<ProdutoDTO> list() {
         return produtoMapper.asDTOList(produtoService.findAll());
     }
 
     @Override
-    @GetMapping("/page-query")
+    @GetMapping("produtos/page-query")
     public Page<ProdutoDTO> pageQuery(Pageable pageable) {
         Page<Produto> produtoPage = produtoService.findAll(pageable);
         List<ProdutoDTO> dtoList = produtoPage
@@ -66,8 +66,8 @@ public class ProdutoControllerImpl implements ProdutoController {
     }
 
     @Override
-    @PutMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> update(@Validated  @RequestBody ProdutoDTO produtoDTO, @PathVariable("id") Integer id) {
+    @PutMapping("/produto/{id}")
+    public ResponseEntity<ProdutoDTO> update(@Validated  @RequestBody ProdutoDTO produtoDTO, @PathVariable Integer id) {
         Produto produto = produtoMapper.asEntity(produtoDTO);
         ProdutoDTO responseDTO = produtoMapper.asDTO(produtoService.update(produto, id));
         return ResponseEntity.ok(responseDTO);
