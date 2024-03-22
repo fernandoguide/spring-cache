@@ -14,20 +14,20 @@ import java.util.List;
 @Api(tags = "Produto API")
 public interface ProdutoController {
     @ApiOperation("Add new data")
-    public ProdutoDTO save(@RequestBody ProdutoDTO produto);
+    ProdutoDTO save(@RequestBody ProdutoDTO produto);
 
     @ApiOperation("Find by Id")
-    public ProdutoDTO findById(@PathVariable Integer id);
+    ProdutoDTO findById(@PathVariable Integer id);
 
     @ApiOperation("Delete based on primary key")
-    public ResponseEntity<ProdutoDTO> delete(@PathVariable Integer id);
+    ResponseEntity<ProdutoDTO> delete(@PathVariable Integer id);
 
     @ApiOperation("Find all data")
-    public List<ProdutoDTO> list();
+    List<ProdutoDTO> list();
 
     @ApiOperation("Pagination request")
-    public Page<ProdutoDTO> pageQuery(Pageable pageable);
+    Page<ProdutoDTO> pageQuery(Pageable pageable);
 
     @ApiOperation("Update one data")
-    public ResponseEntity<ProdutoDTO> update(@RequestBody ProdutoDTO dto, @PathVariable Integer id);
+    ResponseEntity<ProdutoDTO> update(@RequestBody ProdutoDTO dto, @PathVariable Integer id);
 }
